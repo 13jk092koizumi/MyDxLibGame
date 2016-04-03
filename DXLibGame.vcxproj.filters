@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Sequence">
+      <UniqueIdentifier>{614ce68a-5ae9-4cde-9104-e2cd06031947}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sequence\Game">
+      <UniqueIdentifier>{c703d13d-3f26-43a4-9b3c-8866839c269a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Battle">
+      <UniqueIdentifier>{439ad189-4659-42b9-acda-e5856680e101}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="Sequence\Title.cpp">
+      <Filter>Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence\Parent.cpp">
+      <Filter>Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence\Game\Parent.cpp">
+      <Filter>Sequence\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence\Game\BaseTown.cpp">
+      <Filter>Sequence\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence\GameOver.cpp">
+      <Filter>Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence\Ending.cpp">
+      <Filter>Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence\Game\Dungeon.cpp">
+      <Filter>Sequence\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence\Game\Battle.cpp">
+      <Filter>Sequence\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence\Game\Shop.cpp">
+      <Filter>Sequence\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameController.cpp" />
+    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="GlobalValues.cpp" />
+    <ClCompile Include="Battle\Player.cpp">
+      <Filter>Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Battle\BattleMain.cpp">
+      <Filter>Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Battle\Enemy.cpp">
+      <Filter>Battle</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sequence\Title.h">
+      <Filter>Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence\Parent.h">
+      <Filter>Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence\Child.h">
+      <Filter>Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="Sequence\Game\BaseTown.h">
+      <Filter>Sequence\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence\Game\Parent.h">
+      <Filter>Sequence\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence\Game\Child.h">
+      <Filter>Sequence\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence\GameOver.h">
+      <Filter>Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence\Ending.h">
+      <Filter>Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence\Game\Dungeon.h">
+      <Filter>Sequence\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence\Game\Battle.h">
+      <Filter>Sequence\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence\Game\Shop.h">
+      <Filter>Sequence\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameController.h" />
+    <ClInclude Include="Window.h" />
+    <ClInclude Include="GlobalValues.h" />
+    <ClInclude Include="Battle\CharacterStatus.h">
+      <Filter>Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Battle\Player.h">
+      <Filter>Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Battle\BattleMain.h">
+      <Filter>Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Battle\Enemy.h">
+      <Filter>Battle</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
