@@ -2,6 +2,7 @@
 #define INCLUDED_GLOBALVALUES_H
 
 //#define SIZEOF(array) (sizeof(array) / sizeof*(array))
+#define STR(var) #var //引数に入る文字を文字列に変換するマクロ
 
 namespace Global {
 	const int WindowWidth = 640;							//ウィンドウ横

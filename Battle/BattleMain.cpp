@@ -41,11 +41,11 @@ namespace BATTLE {
 
 	//TODO:引数に選択した敵の番号を追加
 	bool BattleMain::doTurn(int flameCount, int command ,int targetNum) {
-		Global::moveScreen(flameCount, "コマンド実行中");
+		//Global::moveScreen(flameCount, "コマンド実行中");
 		switch ( command ) {
-			case 1:
-				DrawString( 100, 200, "こうげき！", GetColor( 255, 255, 255 ) );
-				if ( mIsCalcHP ) { //HPの計算中か
+			case 1: //こうげき
+				DrawString( 100, 200, "こうげき！", GetColor( 255, 0, 0 ) );
+				if ( mIsCalcHP ) { //HPの計算中かどうか
 						Status status = mEnemy[ targetNum ].getStatus();
 						DrawFormatString( 0, 0, GetColor( 255, 255, 255 ), "NowPlayerHP:%d/%d", mPlayer->getHP(), mPlayer->getHPMax() );
 						DrawFormatString( 0, 40, GetColor( 255, 255, 255 ), "敵に%dのダメージ！！EnemyHP:%d/%d", mEnemyDamage, status.hp, status.hpMax );
@@ -53,16 +53,16 @@ namespace BATTLE {
 				}
 				reduceEnemyHP(); //HP計算
 				break;
-			case 101:case 102:case 103:case 104:case 105:
+
+			case 101:case 102:case 103:case 104:case 105: //スキル
 				DrawFormatString( 100, 200, GetColor( 255, 255, 255 ), "スキル%d", command - 100 );
 				break;
-			case 200:
+
+			case 200: //にげる
 				DrawString( 100, 200, "にげる！", GetColor( 255, 255, 255 ) );
 				break;
 		}
 		if ( isBattleEnd() ) { //バトル終了
-			//TODO:リザルト表示
-			result();
 			return true; //バトル終了でtrue返却
 		}
 		
@@ -107,6 +107,11 @@ namespace BATTLE {
 			return true; //敵全滅。バトル終了
 		}
 		return false; //まだ終了しない
+	}
+
+	bool BattleMain::isGameOver() {
+		//TODO:プレイヤーが死んでたらゲームオーバーにする
+		return false;
 	}
 
 	void BattleMain::result() {

@@ -37,6 +37,7 @@ namespace Sequence {
 				mWindow( 0 ),
 				mBattleMain(0),
 				ｍIsSkillMenu( false ),
+				mBattleState(Battle_None),
 				mCommandPhase(true), //最初はコマンド選択フェーズ
 				mActPhase(false),
 				mDecideCommand(false)
@@ -53,6 +54,7 @@ namespace Sequence {
 				mWindow = new Window[ 5 ];
 
 				mBattleMain = new BattleMain;
+				mBattleState = Battle_CommandSelect;
 			}
 
 			Battle::~Battle() {
@@ -68,12 +70,75 @@ namespace Sequence {
 				//画面描画
 				mImage[ 0 ].drawGraph( 0, 0 );
 				drawState();
+				
+				//バトルの状態遷移
+				switch ( mBattleState ) {
+					case Battle_CommandSelect:
+						mBattleMain->resetTurn(); //ターンの初期化
+						mDecideCommand = false; //コマンド初期化
+						selectCommand();
+						if ( mDecideCommand ) { //コマンドを決定した
+							mBattleState = Battle_PlayerAct;
+						}
+						break;
+					case Battle_PlayerAct:
+						if ( mBattleMain->doTurn( mFramecount, commandKind() /*selectTarget()*/ ) ) { //プレイヤーのターン終了
+							mBattleState = Battle_EnemyAct;
+						}
+						++mFramecount;
+						if ( mFramecount > 60 ) {
+							mBattleState = Battle_EnemyAct;
+							mFramecount = 0;
+						}
+						break;
+					case Battle_EnemyAct:
+						if ( mBattleMain->doTurn( mFramecount, commandKind() ) ) { //敵ターン終了
+							mBattleState = Battle_CommandSelect;
+							if ( mBattleMain->isBattleEnd() ) { //バトルが終了してたら
+								mBattleState = Battle_Result; //リザルト画面表示
+								if ( mBattleMain->isGameOver() ) { //ゲームオーバーフラグを満たしてたら
+									mBattleState = Battle_Gameover;//ゲームオーバーへ
+								}
+							}
+						}
+
+						++mFramecount;
+						if ( mFramecount > 60 ) {
+							mBattleState = Battle_CommandSelect;
+							mFramecount = 0;
+						}
+						break;
+					case Battle_Result:
+						/*TODO:リザルト画面表示(終わったフラグが立ったらBattle_Endへ)*/
+						++mFramecount;
+						if ( mFramecount > 60 ) {
+							mBattleState = Battle_End;
+							mFramecount = 0;
+						} else {
+							mBattleMain->result();
+						}
+						break;
+					case Battle_End:
+						/*TODO:終了アニメーションの表示*/
+						mBattleState = Battle_None; //変数初期化
+						next = new Dungeon; //ダンジョンに戻る
+						break;
+					case Battle_Gameover:
+						parent->moveTo( Parent::NEXT_GAME_OVER ); //ゲームオーバーへ
+						mBattleState = Battle_None; //変数初期化
+						break;
+					case Battle_None: //ありえない！？
+						DrawString( 0, 200, "NowBattleState is NONE!!!", GetColor( 255, 255, 0 ) );
+						WaitKey();
+						break;
+				}
+
+				/*
 				//コマンド選択フェーズか
 				if ( mCommandPhase ) {
 					mBattleMain->resetTurn(); //ターンの初期化
 					mDecideCommand = false; //コマンド初期化
 					selectCommand();
-					DrawString( 100, 3, "コマンドを選択してください。", ::WHITE );
 
 					if ( mDecideCommand ) {
 						mCommandPhase = false; //選択フェーズをオフに
@@ -92,7 +157,11 @@ namespace Sequence {
 						mCommandPhase = true;
 					}
 				}
+				*/
 				
+				//デバッグ
+				DrawFormatString( 100, 200, GetColor(0,0,0), "mBattleState:%d", mBattleState );
+
 				if ( CheckHitKey( KEY_INPUT_D ) ) {
 					clsDx(); //printfDx clear
 					next = new Dungeon;

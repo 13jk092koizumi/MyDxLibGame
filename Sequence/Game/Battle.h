@@ -28,6 +28,16 @@ namespace Sequence {
 				WINNAME_B_MESSAGE,
 				WINNAME_B_CHARA,
 			};
+			enum BattleState {
+				Battle_Start, //バトル開始
+				Battle_CommandSelect, //コマンド選択
+				Battle_PlayerAct, //プレイヤーのコマンド実行
+				Battle_EnemyAct, //敵の攻撃アクション
+				Battle_Result, //リザルト画面表示
+				Battle_End, //バトル終了
+				Battle_Gameover, //ゲームオーバー
+				Battle_None,
+			};
 			void drawState(); //画面を構成
 			void selectCommand(); //コマンド選択
 			void changeCursor( int cursorIndex, int listSize ); //カーソル位置メンバの変更
@@ -44,6 +54,7 @@ namespace Sequence {
 			Window* mWindow;
 
 			BATTLE::BattleMain* mBattleMain;
+			BattleState mBattleState; //バトルの状態
 			bool mCommandPhase; //選択フェーズかどうか
 			bool mActPhase; //実行フェーズかどうか
 			bool mDecideCommand; //コマンドが決定したかどうか
