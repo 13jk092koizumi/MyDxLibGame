@@ -4,6 +4,7 @@
 #include "Child.h"
 class Image;
 class Window;
+class Animation;
 
 namespace BATTLE {
 	class BattleMain;
@@ -52,6 +53,7 @@ namespace Sequence {
 
 			Image* mImage;
 			Window* mWindow;
+			Animation* mAnimation;
 
 			BATTLE::BattleMain* mBattleMain;
 			BattleState mBattleState; //ƒoƒgƒ‹‚Ìó‘Ô

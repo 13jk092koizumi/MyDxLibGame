@@ -120,6 +120,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Battle\BattleMain.cpp" />
     <ClCompile Include="Battle\Enemy.cpp" />
     <ClCompile Include="Battle\Player.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Battle\BattleMain.h" />
     <ClInclude Include="Battle\CharacterStatus.h" />
     <ClInclude Include="Battle\Enemy.h" />

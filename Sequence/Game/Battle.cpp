@@ -8,6 +8,7 @@ using namespace std;
 #include "Battle/BattleMain.h"
 #include "Image.h"
 #include "Window.h"
+#include "Animation.h"
 #include "GlobalValues.h"
 
 using namespace BATTLE;
@@ -26,7 +27,7 @@ namespace {
 		"スキル4",
 		"スキル5",
 	};
-
+	
 } //namespace
 
 namespace Sequence {
@@ -35,6 +36,7 @@ namespace Sequence {
 				mFramecount( 0 ),
 				mImage( 0 ),
 				mWindow( 0 ),
+				mAnimation(0),
 				mBattleMain(0),
 				ｍIsSkillMenu( false ),
 				mBattleState(Battle_None),
@@ -55,6 +57,7 @@ namespace Sequence {
 
 				mBattleMain = new BattleMain;
 				mBattleState = Battle_CommandSelect;
+				mAnimation = new Animation( 90, 3 );
 			}
 
 			Battle::~Battle() {
@@ -63,17 +66,27 @@ namespace Sequence {
 
 				delete[] mWindow;
 				mWindow = 0;
+
+				delete mAnimation;
+				mAnimation = 0;
 			}
 
 			Child* Battle::update( Parent* parent ) {
 				Child* next = this;
 				//画面描画
-				mImage[ 0 ].drawGraph( 0, 0 );
-				drawState();
+				//drawState();
 				
+				//アニメーション用変数
+				bool isValidAnime = false;
+				int nowDivNum = 0;
+				int color = 0;
+
 				//バトルの状態遷移
 				switch ( mBattleState ) {
 					case Battle_CommandSelect:
+						
+						drawState();
+						
 						mBattleMain->resetTurn(); //ターンの初期化
 						mDecideCommand = false; //コマンド初期化
 						selectCommand();
@@ -81,18 +94,31 @@ namespace Sequence {
 							mBattleState = Battle_PlayerAct;
 						}
 						break;
+					
 					case Battle_PlayerAct:
-						if ( mBattleMain->doTurn( mFramecount, commandKind() /*selectTarget()*/ ) ) { //プレイヤーのターン終了
+						if ( mBattleMain->exeTurn( mFramecount, commandKind() /*selectTarget()*/ ) ) { //プレイヤーのターン終了
 							mBattleState = Battle_EnemyAct;
 						}
-						++mFramecount;
-						if ( mFramecount > 60 ) {
+						
+						isValidAnime = mAnimation->animate(); //コマ送りのタイミングか
+						if ( isValidAnime && mAnimation->getmIsAnimating() ) { //アニメーションが有効である
+							nowDivNum = mAnimation->getNowDivNum();
+							color = 88 * nowDivNum;
+							color = ( color > 255 ) ? 255 : color;
+							DrawBox( 0, 0,Global::WindowWidth,Global::WindowHeight, GetColor( color, color, color ),true );
+						} else if ( mAnimation->getmIsAnimating() == false ) {
+							mAnimation->reset(); //カウンタをリセット
+							mAnimation->start();
 							mBattleState = Battle_EnemyAct;
-							mFramecount = 0;
 						}
+//						++mFramecount;
+//						if ( mFramecount > 60 ) {
+//							mBattleState = Battle_EnemyAct;
+//							mFramecount = 0;
+//						}
 						break;
 					case Battle_EnemyAct:
-						if ( mBattleMain->doTurn( mFramecount, commandKind() ) ) { //敵ターン終了
+						if ( mBattleMain->exeTurn( mFramecount, commandKind() ) ) { //敵ターン終了
 							mBattleState = Battle_CommandSelect;
 							if ( mBattleMain->isBattleEnd() ) { //バトルが終了してたら
 								mBattleState = Battle_Result; //リザルト画面表示
@@ -148,8 +174,8 @@ namespace Sequence {
 				}
 				if ( mActPhase  && mFramecount < 60) {
 					//TODO:バトルのアニメーション処理・標的選択
-					if ( mBattleMain->doTurn( mFramecount, commandKind() ) ) {
-						next = new Dungeon; //doTurnがtrueならバトルが終了した
+					if ( mBattleMain->exeTurn( mFramecount, commandKind() ) ) {
+						next = new Dungeon; //exeTurnがtrueならバトルが終了した
 					}
 					++mFramecount;
 					if ( mFramecount == 60 ) {
@@ -175,6 +201,9 @@ namespace Sequence {
 			}
 
 			void Battle::drawState() {
+				//背景
+				mImage[ 0 ].drawGraph( 0, 0 );
+
 				//メッセージログ
 				mWindow[ WINNAME_B_MESSAGE ].drawWindow( 2, 2, 639, 30, Window::WINDOW_LINE );
 				DrawFormatString( 20, 5, ::WHITE, "敵が襲ってきた！！" );
@@ -294,11 +323,12 @@ namespace Sequence {
 							case 4:
 								return 105;
 						}
-						break;
+						//break;
 					case 2:
 						//にげる
 						return 200;
 				}
+				return -1;
 			}
 
 	} //namespace Game

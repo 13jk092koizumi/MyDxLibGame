@@ -40,15 +40,15 @@ namespace BATTLE {
 	}
 
 	//TODO:引数に選択した敵の番号を追加
-	bool BattleMain::doTurn(int flameCount, int command ,int targetNum) {
+	bool BattleMain::exeTurn(int flameCount, int command ,int targetNum) {
 		//Global::moveScreen(flameCount, "コマンド実行中");
 		switch ( command ) {
 			case 1: //こうげき
 				DrawString( 100, 200, "こうげき！", GetColor( 255, 0, 0 ) );
 				if ( mIsCalcHP ) { //HPの計算中かどうか
 						Status status = mEnemy[ targetNum ].getStatus();
-						DrawFormatString( 0, 0, GetColor( 255, 255, 255 ), "NowPlayerHP:%d/%d", mPlayer->getHP(), mPlayer->getHPMax() );
-						DrawFormatString( 0, 40, GetColor( 255, 255, 255 ), "敵に%dのダメージ！！EnemyHP:%d/%d", mEnemyDamage, status.hp, status.hpMax );
+						DrawFormatString( 300, 0, GetColor( 255, 255, 255 ), "NowPlayerHP:%d/%d", mPlayer->getHP(), mPlayer->getHPMax() );
+						DrawFormatString( 330, 40, GetColor( 255, 255, 255 ), "敵に%dのダメージ！！EnemyHP:%d/%d", mEnemyDamage, status.hp, status.hpMax );
 						break;
 				}
 				reduceEnemyHP(); //HP計算

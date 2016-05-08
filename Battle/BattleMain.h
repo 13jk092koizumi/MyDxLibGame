@@ -12,7 +12,7 @@ namespace BATTLE {
 		BattleMain();
 		~BattleMain();
 
-		bool doTurn( int flameCount, int command, int targetNum = 0 );
+		bool exeTurn( int flameCount, int command, int targetNum = 0 );
 		vector<int> getEnemyStatus(); //敵のステータス情報を取得
 		int getEnemyNum() const; //敵の数を返却
 		void result(); //リザルト画面表示
