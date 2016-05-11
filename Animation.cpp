@@ -39,7 +39,13 @@ void Animation::start() {
 	mIsAnimating = true;
 }
 
-void Animation::reset() {
+void Animation::end() {
+	mCount = 0;
+	mNowDivNum = 0;
+	mIsAnimating = false;
+}
+
+void Animation::reset(int flameNum,int divideNum) {
 	mCount = 0;
 	mNowDivNum = 0;
 	mIsAnimating = false;

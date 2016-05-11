@@ -5,6 +5,7 @@ using namespace std;
 #include "Battle/BattleMain.h"
 #include "Battle/Player.h"
 #include "Battle/Enemy.h"
+#include "Animation.h"
 #include "GlobalValues.h"
 
 namespace BATTLE {
@@ -19,7 +20,8 @@ namespace BATTLE {
 		mPlayerLive(true),
 		mIsCalcHP(false),
 		mPlayer(0),
-		mEnemy(0) {
+		mEnemy(0),
+		mAnimation(0) {
 		//敵生成
 		mEnemyNum = GetRand( enemyMax ); //1~5の乱数
 		if ( mEnemyNum <= 0 || mEnemyNum > 5 ) { //変な値になったら1にする
@@ -28,10 +30,12 @@ namespace BATTLE {
 		mPlayer = new Player(3);
 		mPlayer->setStatus();
 		mEnemy = new Enemy[ mEnemyNum ];
+		//敵の数を決める(１～５)
 		for ( int i = 0; i < mEnemyNum; ++i ) {
 			int rand = GetRand( 4 ) + 1;
 			mEnemy[ i ].setStatus( mPlayer->getLevel() + rand );
 		}
+		mAnimation = new Animation( 30, 3 );
 	}
 
 	BattleMain::~BattleMain() {
@@ -44,22 +48,22 @@ namespace BATTLE {
 		//Global::moveScreen(flameCount, "コマンド実行中");
 		switch ( command ) {
 			case 1: //こうげき
-				DrawString( 100, 200, "こうげき！", GetColor( 255, 0, 0 ) );
+				DrawString( 200, 200, "こうげき！", GetColor( 255, 0, 0 ) );
 				if ( mIsCalcHP ) { //HPの計算中かどうか
 						Status status = mEnemy[ targetNum ].getStatus();
 						DrawFormatString( 300, 0, GetColor( 255, 255, 255 ), "NowPlayerHP:%d/%d", mPlayer->getHP(), mPlayer->getHPMax() );
-						DrawFormatString( 330, 40, GetColor( 255, 255, 255 ), "敵に%dのダメージ！！EnemyHP:%d/%d", mEnemyDamage, status.hp, status.hpMax );
+						DrawFormatString( 230, 40, GetColor( 255, 255, 255 ), "敵に%dのダメージ！！EnemyHP:%d/%d", mEnemyDamage, status.hp, status.hpMax );
 						break;
 				}
 				reduceEnemyHP(); //HP計算
 				break;
 
 			case 101:case 102:case 103:case 104:case 105: //スキル
-				DrawFormatString( 100, 200, GetColor( 255, 255, 255 ), "スキル%d", command - 100 );
+				DrawFormatString( 200, 200, GetColor( 255, 255, 255 ), "スキル%d", command - 100 );
 				break;
 
 			case 200: //にげる
-				DrawString( 100, 200, "にげる！", GetColor( 255, 255, 255 ) );
+				DrawString( 200, 200, "にげる！", GetColor( 255, 255, 255 ) );
 				break;
 		}
 		if ( isBattleEnd() ) { //バトル終了

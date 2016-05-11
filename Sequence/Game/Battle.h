@@ -40,6 +40,7 @@ namespace Sequence {
 				Battle_None,
 			};
 			void drawState(); //画面を構成
+			void drawEnemy(); //敵の数に合わせて描画
 			void selectCommand(); //コマンド選択
 			void changeCursor( int cursorIndex, int listSize ); //カーソル位置メンバの変更
 			int commandKind(); //何のコマンドか(こうげき・スキル・逃げる)

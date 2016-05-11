@@ -17,7 +17,8 @@ public:
 	bool getmIsAnimating();
 	int getNowDivNum();
 	void start(); //判定開始
-	void reset(); //変数のリセット
+	void end();//終了して変数初期化
+	void reset(int flameNum, int divideNum); //変数の再設定
 private:
 	unsigned int mCount; //カウンタ
 	unsigned int mEndCount; //終了するタイミング

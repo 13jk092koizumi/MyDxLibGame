@@ -1,12 +1,13 @@
 #ifndef INCLUDED_BATTLE_BATTLEMAIN_H
 #define INCLUDED_BATTLE_BATTLEMAIN_H
 
+class Animation;
 namespace BATTLE {
 	
 	class Player;
 	class Enemy;
 	
-	//バトル全体の管理
+	//バトルのHP計算やエフェクト表示など
 	class BattleMain {
 	public:
 		BattleMain();
@@ -21,7 +22,6 @@ namespace BATTLE {
 		bool isGameOver(); //ゲームオーバー判定
 	private:
 		void reduceEnemyHP(int targetNum = 0); //こうげきに合わせて敵のHPを減らす
-		void counterSet(); //現在のカウンタを保存
 
 		const int enemyMax = 5; //敵の数の最大値
 
@@ -37,6 +37,7 @@ namespace BATTLE {
 		
 		Player* mPlayer;
 		Enemy* mEnemy;
+		Animation* mAnimation;
 
 	};
 

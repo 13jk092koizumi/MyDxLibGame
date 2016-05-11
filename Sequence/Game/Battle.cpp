@@ -28,6 +28,13 @@ namespace {
 		"スキル5",
 	};
 	
+	/*アニメーション判別用*/
+	enum anime {
+		ANIME_PATTACK, //プレイヤー攻撃アニメーション
+		ANIME_EATTACK, //敵攻撃アニメーション
+		ANIME_IMG_ENEMY, //敵画像のアニメーション
+	};
+
 } //namespace
 
 namespace Sequence {
@@ -57,7 +64,7 @@ namespace Sequence {
 
 				mBattleMain = new BattleMain;
 				mBattleState = Battle_CommandSelect;
-				mAnimation = new Animation( 90, 3 );
+				mAnimation = new Animation[ 3 ]{ Animation( 30, 3 ), Animation(30,3), Animation(60,6) };
 			}
 
 			Battle::~Battle() {
@@ -67,15 +74,14 @@ namespace Sequence {
 				delete[] mWindow;
 				mWindow = 0;
 
-				delete mAnimation;
+				delete[] mAnimation;
 				mAnimation = 0;
 			}
 
 			Child* Battle::update( Parent* parent ) {
 				Child* next = this;
 				//画面描画
-				//drawState();
-				
+								
 				//アニメーション用変数
 				bool isValidAnime = false;
 				int nowDivNum = 0;
@@ -100,15 +106,15 @@ namespace Sequence {
 							mBattleState = Battle_EnemyAct;
 						}
 						
-						isValidAnime = mAnimation->animate(); //コマ送りのタイミングか
-						if ( isValidAnime && mAnimation->getmIsAnimating() ) { //アニメーションが有効である
-							nowDivNum = mAnimation->getNowDivNum();
+						isValidAnime = mAnimation[ANIME_PATTACK].animate(); //コマ送りのタイミングか
+						if ( isValidAnime && mAnimation[ANIME_PATTACK].getmIsAnimating() ) { //アニメーションが有効である
+							nowDivNum = mAnimation[ANIME_PATTACK].getNowDivNum();
 							color = 88 * nowDivNum;
 							color = ( color > 255 ) ? 255 : color;
 							DrawBox( 0, 0,Global::WindowWidth,Global::WindowHeight, GetColor( color, color, color ),true );
-						} else if ( mAnimation->getmIsAnimating() == false ) {
-							mAnimation->reset(); //カウンタをリセット
-							mAnimation->start();
+						} else if ( mAnimation[ANIME_PATTACK].getmIsAnimating() == false ) {
+							mAnimation[ANIME_PATTACK].end(); //カウンタを初期化
+							mAnimation[ANIME_PATTACK].start();
 							mBattleState = Battle_EnemyAct;
 						}
 //						++mFramecount;
@@ -186,13 +192,11 @@ namespace Sequence {
 				*/
 				
 				//デバッグ
-				DrawFormatString( 100, 200, GetColor(0,0,0), "mBattleState:%d", mBattleState );
+				DrawFormatString( 0, 200, GetColor(0,0,0), "mBattleState:%d", mBattleState );
 
-				if ( CheckHitKey( KEY_INPUT_D ) ) {
-					clsDx(); //printfDx clear
+				if ( Global::isKeyOn( KEY_INPUT_D ) ) {
 					next = new Dungeon;
-				} else if ( CheckHitKey( KEY_INPUT_G ) ) {
-					clsDx();
+				} else if ( Global::isKeyOn ( KEY_INPUT_G ) ) {
 					parent->moveTo( Parent::NEXT_GAME_OVER );
 				}
 
@@ -227,22 +231,55 @@ namespace Sequence {
 				mImage[ 1 ].drawGraph( 333, 355, false );
 				
 				/*敵*/
-				//敵画像TODO:ランダムに敵生成できるように
-				int counter = 0;
-				counter = GetRand( 100 );
-				//DrawFormatString( 400, 200, ::WHITE, "count:%d", counter );
-				mImage[ 2 ].drawRotaGraph( 300, 220, 1.5, 0.0, true );
-				if ( counter % 100 == 0 ) {
-					mImage[ 2 ].drawRotaGraph( 300, 220, 1.6, 0.0, true );
-				}
-				//敵の残りHPを表示
-				vector<int>& v = mBattleMain->getEnemyStatus();
-				int i = 0;
-				for ( auto itr = v.begin(); itr != v.end(); ++itr ) {
-					DrawFormatString( 100, 30 + 20 * i, ::WHITE, "enemy%d:%d", i, v.at(i) );
-					++i;
-				}
+				drawEnemy();
 				
+			}
+
+			void Battle::drawEnemy() {
+				int enemyNum = mBattleMain->getEnemyNum(); //敵の数取得
+				float scale = 0;
+				int rand = GetRand( 100 );
+				if ( rand == 0 ) {
+					scale = 0.1;
+				}
+				mAnimation[ ANIME_IMG_ENEMY ].animate();
+				int nowDivNum = mAnimation[ANIME_IMG_ENEMY].getNowDivNum(); //何コマ目か取得
+				int movePx = 0; //敵画像の上下の移動量(上下に揺らす)
+				switch ( nowDivNum ) {
+					case 1:
+						movePx = 1;	break;
+					case 2:
+						movePx = 2;	break;
+					case 3:
+						movePx = 3;	break;
+					case 4:
+						movePx = 2;	break;
+					case 5:
+						movePx = 1;	break;
+					case 6:
+						movePx = 0;
+						mAnimation[ ANIME_IMG_ENEMY ].end();
+						mAnimation[ ANIME_IMG_ENEMY ].start(); //アニメーションの再開
+						break;
+				}
+				switch ( enemyNum ) {
+					case 1:
+						mImage[ 2 ].drawRotaGraph( Global::WindowWidth / 2, (Global::WindowHeight / 2) - movePx , 1.5f+scale, 0.0f ,true);
+						break;
+					case 2:
+						for ( int i = 1; i <= enemyNum; ++i ) {
+							mImage[ 2 ].drawRotaGraph( 640 - ( 440 * i / enemyNum ), 180 - movePx, 1.4f+scale, 0.0f, true );
+						}
+						break;
+					case 3:
+					case 4:
+					case 5:
+						for ( int i = 1; i <= enemyNum; ++i ) {
+							mImage[ 2 ].drawRotaGraph( 640 - ( 540 * i / enemyNum ), 180 - movePx, 1.2f+scale, 0.0f, true );
+ 						}
+						break;
+				}
+
 			}
 
 			void Battle::selectCommand() {

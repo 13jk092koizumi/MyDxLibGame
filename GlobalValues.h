@@ -14,6 +14,8 @@ namespace Global {
 	void moveScreen(int flamecount, char* message); //シーケンス移動中
 	//引数のキーが入力されているかを返す
 	bool isKeyOn( int );
+	//boolalphaもどき
+	char* boolalpha(int);
 
 } //namespace Global
 
