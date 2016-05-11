@@ -6,6 +6,7 @@ namespace BATTLE {
 	
 	class Player;
 	class Enemy;
+	struct Status; //定義はEnemy.h
 	
 	//バトルのHP計算やエフェクト表示など
 	class BattleMain {
@@ -14,8 +15,9 @@ namespace BATTLE {
 		~BattleMain();
 
 		bool exeTurn( int flameCount, int command, int targetNum = 0 );
-		vector<int> getEnemyStatus(); //敵のステータス情報を取得
+		vector<Status> getEnemyStatus(); //敵のステータス情報を取得
 		int getEnemyNum() const; //敵の数を返却
+		int getDamege(int activeChara) const; //1プレイヤーのダメージか2敵のダメージを返却
 		void result(); //リザルト画面表示
 		void resetTurn(); //ターンの処理をリセット
 		bool isBattleEnd(); //バトルが終わったかどうか

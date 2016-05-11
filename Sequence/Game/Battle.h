@@ -8,6 +8,7 @@ class Animation;
 
 namespace BATTLE {
 	class BattleMain;
+	struct Status;
 }
 
 namespace Sequence {

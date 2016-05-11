@@ -6,6 +6,7 @@ using namespace std;
 #include "Sequence/Game/Parent.h"
 #include "Sequence/Game/Dungeon.h"
 #include "Battle/BattleMain.h"
+#include "Battle/Enemy.h"
 #include "Image.h"
 #include "Window.h"
 #include "Animation.h"
@@ -92,7 +93,8 @@ namespace Sequence {
 					case Battle_CommandSelect:
 						
 						drawState();
-						
+						DrawFormatString( 20, 5, ::WHITE, "敵が襲ってきた！！" );
+
 						mBattleMain->resetTurn(); //ターンの初期化
 						mDecideCommand = false; //コマンド初期化
 						selectCommand();
@@ -111,7 +113,16 @@ namespace Sequence {
 							nowDivNum = mAnimation[ANIME_PATTACK].getNowDivNum();
 							color = 88 * nowDivNum;
 							color = ( color > 255 ) ? 255 : color;
+							/*TODO:攻撃エフェクトに置き換える*/
 							DrawBox( 0, 0,Global::WindowWidth,Global::WindowHeight, GetColor( color, color, color ),true );
+							if ( nowDivNum > 1 ) {
+								//デバッグ
+								int damage = mBattleMain->getDamege( 2 );
+								if ( damage < 0 ) {
+									damage = 11111111;
+								}
+								DrawFormatString( 20, 5, GetColor( 0, 0, 0 ), "敵に%dのダメージ！！", damage ); //ダメージ量表示
+							}
 						} else if ( mAnimation[ANIME_PATTACK].getmIsAnimating() == false ) {
 							mAnimation[ANIME_PATTACK].end(); //カウンタを初期化
 							mAnimation[ANIME_PATTACK].start();
@@ -210,7 +221,6 @@ namespace Sequence {
 
 				//メッセージログ
 				mWindow[ WINNAME_B_MESSAGE ].drawWindow( 2, 2, 639, 30, Window::WINDOW_LINE );
-				DrawFormatString( 20, 5, ::WHITE, "敵が襲ってきた！！" );
 				/*プレイヤー*/
 				//ステータス表示
 				mWindow[ WINNAME_B_STATUS ].drawWindow( 380, 350, 630, 470, Window::WINDOW_LINE );
@@ -240,8 +250,9 @@ namespace Sequence {
 				float scale = 0;
 				int rand = GetRand( 100 );
 				if ( rand == 0 ) {
-					scale = 0.1;
+					scale = 0.1f;
 				}
+				/*敵画像の表示*/
 				mAnimation[ ANIME_IMG_ENEMY ].animate();
 				int nowDivNum = mAnimation[ANIME_IMG_ENEMY].getNowDivNum(); //何コマ目か取得
 				int movePx = 0; //敵画像の上下の移動量(上下に揺らす)
@@ -279,6 +290,27 @@ namespace Sequence {
  						}
 						break;
 				}
+				/*残りHPの表示*/
+				SetFontSize( 12 ); //文字サイズ変更
+				vector<Status> eStatus = mBattleMain->getEnemyStatus(); //vectorで敵のステータス構造体の配列を取得
+				Status* data = eStatus.data(); //敵のStatus構造体のポインタを取得
+				int hpColor = 0; //HPの色
+				int i = 0;
+				for ( auto itr = eStatus.begin(); itr != eStatus.end(); ++itr ) {
+					if( data[ i ].hp < data[ i ].hpMax * 0.3f ) 	{ //HP30%以下のとき
+						hpColor = GetColor( 250, 0, 0 ); //黒っぽい赤
+					} 
+					else if ( data[i].hp < data[i].hpMax * 0.5f ) { //HP50%以下のとき
+						hpColor = GetColor( 255, 165, 0 ); //オレンジ
+					}
+					else {
+						hpColor = GetColor( 255, 255, 255 ); //白
+					}
+					DrawFormatString( 640 - ( 540 * (i+1) / enemyNum ), 175, hpColor, "%d", eStatus[ i ] );
+					++i;
+				}
+
+				SetFontSize( Global::FontSize );
 
 			}
 

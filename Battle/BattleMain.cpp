@@ -49,10 +49,11 @@ namespace BATTLE {
 		switch ( command ) {
 			case 1: //こうげき
 				DrawString( 200, 200, "こうげき！", GetColor( 255, 0, 0 ) );
+				//デバッグ
 				if ( mIsCalcHP ) { //HPの計算中かどうか
 						Status status = mEnemy[ targetNum ].getStatus();
 						DrawFormatString( 300, 0, GetColor( 255, 255, 255 ), "NowPlayerHP:%d/%d", mPlayer->getHP(), mPlayer->getHPMax() );
-						DrawFormatString( 230, 40, GetColor( 255, 255, 255 ), "敵に%dのダメージ！！EnemyHP:%d/%d", mEnemyDamage, status.hp, status.hpMax );
+						//DrawFormatString( 230, 40, GetColor( 255, 255, 255 ), "敵に%dのダメージ！！EnemyHP:%d/%d", mEnemyDamage, status.hp, status.hpMax );
 						break;
 				}
 				reduceEnemyHP(); //HP計算
@@ -73,23 +74,32 @@ namespace BATTLE {
 		return false; //まだバトル中
 	}
 
-	vector<int> BattleMain::getEnemyStatus( ) {
-		vector<Status> s; //敵ステータスの構造体を取得
+	vector<Status> BattleMain::getEnemyStatus( ) {
+		vector<Status> s; //敵ステータスの構造体を取得.Statusの定義はEnemy.h
 		for ( int i = 0; i < mEnemyNum; ++i ) {
 			s.push_back( mEnemy[ i ].getStatus() ); //i番目の敵のステータス構造体を取得
 		}
-		Status* data = s.data();
+		/*Status* data = s.data();
 		vector<int> returndata;
 		int j = 0;
 		for ( auto itr = s.begin(); itr != s.end(); ++itr) {
 			returndata.push_back( data[ j ].hp ); //j番目の敵HP取得
 			++j;
-		}
-		return returndata;
+		}*/
+		return s;
 	}
 
 	int BattleMain::getEnemyNum() const {
 		return mEnemyNum;
+	}
+
+	int BattleMain::getDamege( int activeChara ) const {
+		if ( activeChara == 1 ) { //１ならプレイヤーへのダメージ
+			return mPlayerDamage;
+		} else if ( activeChara == 2 ) { //2なら敵へのダメージ
+			return mEnemyDamage;
+		}
+		return -1; //おかしい
 	}
 
 	void BattleMain::resetTurn() {
@@ -105,8 +115,8 @@ namespace BATTLE {
 			DrawFormatString( 0, 100, GetColor( 255, 0, 0 ), "deathNum:%d", deathNum );
 		}
 		//デバッグ
-		DrawFormatString( 0, 120, GetColor( 255, 0, 0 ), "mEnemyNum:%d", mEnemyNum);
-		DrawFormatString( 0, 140, GetColor( 255, 0, 0 ), "E0isLive():%d", mEnemy[0].isLive() );
+		DrawFormatString( 0, 120, GetColor( 0, 255, 0 ), "mEnemyNum:%d", mEnemyNum);
+		DrawFormatString( 0, 140, GetColor( 0, 255, 0 ), "E0isLive():%s", Global::boolalpha( mEnemy[0].isLive() ) );
 		if ( deathNum > 0 ) {
 			return true; //敵全滅。バトル終了
 		}
