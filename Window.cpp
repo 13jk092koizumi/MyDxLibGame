@@ -10,7 +10,7 @@ namespace {
 	int FrameTime = 0;	//1フレームあたりの経過時間
 	int TimeCounter = 0;	//タイムカウンター
 	const int BlendParam = 230; //アルファブレンドの値
-	const unsigned int windowColor = GetColor( 30, 30, 200 );	//窓の色
+	const unsigned int windowColor = GetColor( 30, 30, 40 );	//窓の色
 	const unsigned int frameColor = GetColor( 255, 255, 255 );	//窓枠の色
 	const unsigned int fontColor = GetColor( 255, 255, 255 ); //文字の色
 }

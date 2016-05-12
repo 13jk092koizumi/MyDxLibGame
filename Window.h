@@ -18,9 +18,9 @@ public:
 	
 	void drawListOnWindow( int arraysize, int pos, char** list); //引数:配列の要素数、カーソルポジション、リスト配列
 	
-	void drawHPBar( int, int, double ); //HPバーを表示(x,y,HPの残り%)
+	void drawHPBar( int x, int y, double percent ); //HPバーを表示(x,y,HPの残り%)
 	
-	void reduceHP( double, double ); //HPバーを減らす(減る前HP%,減った後HP%);
+	void reduceHP( double nowHP, double afterHP ); //HPバーを減らす(減る前HP%,減った後HP%);
 	
 	int getHeight() const; //ウィンドウ縦
 	

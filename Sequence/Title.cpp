@@ -106,7 +106,7 @@ namespace Sequence {
 	
 	void Title::startMenu() {
 		//menu•`‰æ
-		mWindow->drawWindow( 240, 200, 380, 400, Window::WINDOW_LINE );
+		mWindow->drawWindow( 240, 200, 380, 300, Window::WINDOW_LINE );
 		mWindow->drawListOnWindow( 2, mCursorPosition,  list);
 	}
 
